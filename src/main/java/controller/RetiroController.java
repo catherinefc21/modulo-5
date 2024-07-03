@@ -9,18 +9,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Controlador para gestionar las solicitudes de retiro.
+ * Este servlet maneja las peticiones POST para realizar retiros de la cuenta de un usuario.
+ */
 @WebServlet("/retiro")
 public class RetiroController extends HttpServlet {
 
     private UserService usuarioService = new UserService();
 
+    /**
+     * Maneja la solicitud POST para realizar un retiro.
+     * Este método recupera el email del usuario y el monto del retiro desde la solicitud,
+     * luego utiliza el servicio de usuario para realizar el retiro y redirige al usuario a la página de inicio.
+     *
+     * @param request La solicitud HTTP que contiene el email del usuario y el monto a retirar.
+     * @param response La respuesta HTTP que se enviará al cliente.
+     * @throws ServletException Si ocurre un error específico del servlet.
+     * @throws IOException Si ocurre un error de entrada/salida.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-     
+
         String email = request.getParameter("email");
         double monto = Double.parseDouble(request.getParameter("monto"));
 
-       
         usuarioService.realizarRetiro(email, monto);
 
         response.sendRedirect("index.jsp");

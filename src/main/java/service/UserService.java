@@ -6,14 +6,29 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Clase de servicio para manejar las operaciones relacionadas con los usuarios.
+ * Proporciona métodos para verificar las credenciales de los usuarios, realizar retiros y depósitos,
+ * y obtener el saldo de un usuario. Utiliza {@link ConexionBD} para establecer conexiones con la base de datos.
+ */
 public class UserService {
 
     private ConexionBD conexionBD;
 
+    /**
+     * Constructor para inicializar la conexión a la base de datos.
+     */
     public UserService() {
         this.conexionBD = new ConexionBD();
     }
 
+    /**
+     * Verifica las credenciales de un usuario.
+     *
+     * @param email El email del usuario.
+     * @param password La contraseña del usuario.
+     * @return true si las credenciales son válidas, false en caso contrario.
+     */
     public boolean verificarUsuario(String email, String password) {
         Connection connection = conexionBD.establecerConexion();
         if (connection == null) {
@@ -39,6 +54,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Realiza un retiro de la cuenta de un usuario.
+     *
+     * @param email El email del usuario.
+     * @param monto El monto a retirar.
+     */
     public void realizarRetiro(String email, double monto) {
         try (Connection connection = conexionBD.establecerConexion()) {
             String sql = "UPDATE Usuario SET saldo = saldo - ? WHERE email = ?";
@@ -48,10 +69,15 @@ public class UserService {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-          
         }
     }
 
+    /**
+     * Obtiene el saldo actual de la cuenta de un usuario.
+     *
+     * @param email El email del usuario.
+     * @return El saldo de la cuenta del usuario.
+     */
     public double obtenerSaldo(String email) {
         double saldo = 0;
         try (Connection connection = conexionBD.establecerConexion()) {
@@ -64,10 +90,16 @@ public class UserService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-           
         }
         return saldo;
     }
+
+    /**
+     * Realiza un depósito en la cuenta de un usuario.
+     *
+     * @param email El email del usuario.
+     * @param monto El monto a depositar.
+     */
     public void realizarDeposito(String email, double monto) {
         try (Connection connection = conexionBD.establecerConexion()) {
             String sql = "UPDATE Usuario SET saldo = saldo + ? WHERE email = ?";
